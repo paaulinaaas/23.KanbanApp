@@ -45,5 +45,6 @@ export function updateLane(req, res) {
   if (!req.body.name && !req.body.notes) {
     res.status(403).end();
   }
+}
 
 

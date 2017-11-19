@@ -34,3 +34,6 @@ export function deleteNote(req, res) {
       }
       return foundLane.save();
     }
+  });
+}
+
