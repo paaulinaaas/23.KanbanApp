@@ -1,5 +1,7 @@
 import Note from '../models/note';
 import Lane from '../models/lane';
+import uuid from 'uuid/v4';
+import mongoose from 'mongoose';
 
 export function addNote(req, res) {
   if (!req.body.task) {
@@ -25,15 +27,23 @@ export function addNote(req, res) {
 }
 
 export function deleteNote(req, res) {
-  Lane.findById(req.params.laneId).exec()
-  .then(foundLane => {
-    if (foundLane) {
-      const index = foundLane.notes.findIndex(n => String(n._id) === req.params.noteId);
+  Lane.findOne({ id: req.params.laneId }, (err, foundLane) => {
+    if (err) {
+      res.status(500).send(err);
+    }
+
+    Note.findOne({ id: req.params.noteId }, (err, foundNote) => {
+      const index = foundLane.notes.findIndex(n => String(n) === String(foundNote._id));
+    
       if (index >= 0) {
         foundLane.notes.splice(index, 1);
       }
-      return foundLane.save();
-    }
-  });
+      
+      foundLane.save();
+      res.json(foundLane);
+    });
+  });    
 }
+
+export function updateNote() {}
 
